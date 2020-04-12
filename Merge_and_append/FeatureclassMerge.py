@@ -1,20 +1,21 @@
 
-#Code for iterating through list of feature classes, adding name of the featureclass in attribute, and merging all the featureclasses into one featureclass
 def merge_and_rename (input_featclass, output_shapefile):
-
+    #importing required packages and modules
     import arcpy
     import os
     from arcpy import env
+    
+    #assigning variable to user-fed parameters
     env.workspace=input_featclass
     env.overwriteOutput=True
     output=output_shapefile
 
-    #Listing all the featureclass in Practise.gdb
+    #Listing all the featureclasses in user-fed gdb 
     fcs=arcpy.ListFeatureClasses()
-    print fcs
-    for f in fcs:
-        print f
-
+    
+    #iterating through all the featureclass, creating a field inside the attribute table called "Name",
+    # and appending the name of the featureclass into the "Name" field
+    for f in fcs:       
         # assigning variable for the name of shapefile without extension
         name=os.path.splitext(f)[0]
 
@@ -25,10 +26,9 @@ def merge_and_rename (input_featclass, output_shapefile):
                 row[0]=name
                 cur.updateRow(row)
 
-    #Merging into a different,seperate shapefile.
-
+    #Merging all the edited featureclasses into a single shapefile.
     arcpy.Merge_management(fcs, output)
     print"Successfully merged and renamed the feature classes inside the attribute table"
 
-merge_and_rename(r"J:\Research\Coding_Works\GITHUB\Merge_and_rename\test.gdb", r"J:\Research\Coding_Works\GITHUB\Merge_and_rename\test.shp")
+#merge_and_rename(r"..\test.gdb", r"\test.shp")
 
